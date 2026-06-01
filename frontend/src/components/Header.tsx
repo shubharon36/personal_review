@@ -28,7 +28,7 @@ export default function Header() {
         {/* Left: Site name */}
         <Link href="/" className="group" id="site-logo">
           <h1 className="text-[22px] font-medium text-[var(--color-text-primary)] dark:text-[var(--color-dark-text)]">
-            So&apos;s Reviews
+            Shubharon&apos;s Reviews
           </h1>
           <p className="text-[11px] text-[var(--color-text-muted)] dark:text-[var(--color-dark-text-secondary)] -mt-0.5">
             personal opinions, no algorithms
