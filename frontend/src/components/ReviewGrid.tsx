@@ -29,8 +29,8 @@ export default function ReviewGrid({ reviews }: ReviewGridProps) {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {reviews.map((review) => (
-        <ReviewCard key={review.id} review={review} />
+      {reviews.map((review, index) => (
+        <ReviewCard key={review.id} review={review} priority={index < 4} />
       ))}
     </div>
   );

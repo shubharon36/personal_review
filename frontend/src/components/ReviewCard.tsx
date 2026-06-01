@@ -5,9 +5,10 @@ import type { Review } from "@/lib/api";
 
 interface ReviewCardProps {
   review: Review;
+  priority?: boolean;
 }
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+export default function ReviewCard({ review, priority = false }: ReviewCardProps) {
   const isMovie = review.type === "movie";
 
   const badgeClasses = isMovie
@@ -34,6 +35,10 @@ export default function ReviewCard({ review }: ReviewCardProps) {
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              priority={priority}
+              loading={priority ? "eager" : "lazy"}
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZTVlN2ViIi8+PC9zdmc+"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">

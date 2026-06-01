@@ -68,6 +68,32 @@ export interface BookSearchResult {
   publisher: string | null;
 }
 
+// ─── Cache ───────────────────────────────────────────────────────────
+
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+const cache = new Map<string, CacheEntry<unknown>>();
+const CACHE_TTL = 60 * 1000; // 1 minute - serve cached data, revalidate in background
+
+function getCached<T>(key: string): T | null {
+  const entry = cache.get(key);
+  if (!entry) return null;
+  return entry.data as T;
+}
+
+function setCache<T>(key: string, data: T): void {
+  cache.set(key, { data, timestamp: Date.now() });
+}
+
+function isCacheStale(key: string): boolean {
+  const entry = cache.get(key);
+  if (!entry) return true;
+  return Date.now() - entry.timestamp > CACHE_TTL;
+}
+
 // ─── Helper ──────────────────────────────────────────────────────────
 
 function getAuthHeaders(): HeadersInit {
@@ -95,6 +121,32 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json();
 }
 
+/**
+ * Fetch with stale-while-revalidate caching.
+ * Returns cached data instantly if available, then refreshes in background.
+ */
+async function cachedApiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const cacheKey = `${path}${options?.body || ""}`;
+  const cached = getCached<T>(cacheKey);
+
+  if (cached && !isCacheStale(cacheKey)) {
+    return cached;
+  }
+
+  if (cached && isCacheStale(cacheKey)) {
+    // Return stale data immediately, revalidate in background
+    apiFetch<T>(path, options)
+      .then((fresh) => setCache(cacheKey, fresh))
+      .catch(() => {}); // silently fail background refresh
+    return cached;
+  }
+
+  // No cache — must await
+  const data = await apiFetch<T>(path, options);
+  setCache(cacheKey, data);
+  return data;
+}
+
 // ─── Reviews ─────────────────────────────────────────────────────────
 
 export async function fetchReviews(params?: {
@@ -110,11 +162,11 @@ export async function fetchReviews(params?: {
   if (params?.sort) searchParams.set("sort", params.sort);
 
   const query = searchParams.toString();
-  return apiFetch<Review[]>(`/api/reviews${query ? `?${query}` : ""}`);
+  return cachedApiFetch<Review[]>(`/api/reviews${query ? `?${query}` : ""}`);
 }
 
 export async function fetchReview(id: string): Promise<Review> {
-  return apiFetch<Review>(`/api/reviews/${id}`);
+  return cachedApiFetch<Review>(`/api/reviews/${id}`);
 }
 
 export async function createReview(data: ReviewCreate): Promise<Review> {
@@ -146,7 +198,7 @@ export async function deleteReview(id: string): Promise<void> {
 // ─── Stats ───────────────────────────────────────────────────────────
 
 export async function fetchStats(): Promise<Stats> {
-  return apiFetch<Stats>("/api/reviews/stats");
+  return cachedApiFetch<Stats>("/api/reviews/stats");
 }
 
 // ─── Search ──────────────────────────────────────────────────────────
