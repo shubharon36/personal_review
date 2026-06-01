@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Light mode colors */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-text-primary: #1a1a18;
+  --color-text-secondary: #6b6b6b;
+  --color-text-muted: #9a9a9a;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.16);
+
+  /* Category: Movies */
+  --color-movie-accent: #993c1d;
+  --color-movie-bg: #faece7;
+  --color-movie-accent-dark: #e8634a;
+  --color-movie-bg-dark: #3d2520;
+
+  /* Category: Books */
+  --color-book-accent: #534ab7;
+  --color-book-bg: #eeedfe;
+  --color-book-accent-dark: #8b80e0;
+  --color-book-bg-dark: #2d2a4a;
+
+  /* Stars */
+  --color-star: #ba7517;
+  --color-star-empty: #e0dcd4;
+
+  /* Dark mode */
+  --color-dark-bg: #1a1a18;
+  --color-dark-surface: #242422;
+  --color-dark-text: #f0ede6;
+  --color-dark-text-secondary: #9c9a92;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
+  --color-dark-border-hover: rgba(255, 255, 255, 0.16);
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.dark body {
+  background-color: var(--color-dark-bg);
+  color: var(--color-dark-text);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
