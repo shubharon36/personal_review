@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "So's Reviews — Movies & Books",
+  title: "Shubharon's Reviews — Movies & Books",
   description:
     "Personal reviews of movies and books. No algorithms, just honest opinions.",
 };

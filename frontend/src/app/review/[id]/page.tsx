@@ -11,17 +11,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const review = await fetchReview(id);
     return {
-      title: `${review.title} — So's Reviews`,
+      title: `${review.title} — Shubharon's Reviews`,
       description: review.quick_take || `${review.type === "movie" ? "Movie" : "Book"} review: ${review.title}`,
       openGraph: {
-        title: `${review.title} — So's Reviews`,
+        title: `${review.title} — Shubharon's Reviews`,
         description: review.quick_take || `A ${review.type} review`,
         images: review.cover_url ? [{ url: review.cover_url }] : [],
       },
     };
   } catch {
     return {
-      title: "Review — So's Reviews",
+      title: "Review — Shubharon's Reviews",
     };
   }
 }
