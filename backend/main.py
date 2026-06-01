@@ -13,9 +13,18 @@ app = FastAPI(
 
 # CORS
 settings = get_settings()
+allowed_origins = [
+    settings.frontend_url,
+    "http://localhost:3000",
+    "https://personal-review-black.vercel.app",
+    "https://personal-review-mkcsml09s-shubharon36s-projects.vercel.app",
+]
+# Remove duplicates and empty strings
+allowed_origins = list(set(o for o in allowed_origins if o))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
